@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Request Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            color: #555;
+            font-weight: bold;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .status {
+            text-align: center;
+            font-size: 14px;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Access Request</h1>
+
+        <!-- User Selection -->
+        <label for="user">User</label>
+        <input type="text" id="user" placeholder="Enter your username or email" />
+
+        <!-- System Selection -->
+        <label for="system">System</label>
+        <select id="system">
+            <option value="">Select a system</option>
+            <!-- Dynamically populated options -->
+        </select>
+
+        <!-- Role Selection -->
+        <label for="role">Role</label>
+        <select id="role" disabled>
+            <option value="">Select a role</option>
+            <!-- Dynamically populated options -->
+        </select>
+
+        <!-- Submit Button -->
+        <button id="submitBtn">Submit Request</button>
+
+        <!-- Status Message -->
+        <div id="statusMessage" class="status"></div>
+    </div>
+
+    <script>
+        // Example JavaScript for Interactivity
+        document.addEventListener('DOMContentLoaded', () => {
+            const systemSelect = document.getElementById('system');
+            const roleSelect = document.getElementById('role');
+            const submitBtn = document.getElementById('submitBtn');
+            const statusMessage = document.getElementById('statusMessage');
+
+            // Example: Fetch systems dynamically
+            function fetchSystems() {
+                // Simulate fetching systems from an API
+                const systems = [
+                    { id: 'sys1', name: 'System A' },
+                    { id: 'sys2', name: 'System B' },
+                ];
+                systems.forEach(system => {
+                    const option = document.createElement('option');
+                    option.value = system.id;
+                    option.textContent = system.name;
+                    systemSelect.appendChild(option);
+                });
+            }
+
+            // Example: Fetch roles dynamically based on selected system
+            function fetchRoles(systemId) {
+                // Simulate fetching roles from an API
+                const roles = {
+                    sys1: [
+                        { id: 'role1', name: 'Admin' },
+                        { id: 'role2', name: 'User' },
+                    ],
+                    sys2: [
+                        { id: 'role3', name: 'Manager' },
+                        { id: 'role4', name: 'Viewer' },
+                    ],
+                };
+                return roles[systemId] || [];
+            }
+
+            // Populate systems on page load
+            fetchSystems();
+
+            // Handle system selection
+            systemSelect.addEventListener('change', () => {
+                const systemId = systemSelect.value;
+                roleSelect.innerHTML = '<option value="">Select a role</option>'; // Reset roles
+                roleSelect.disabled = !systemId;
+
+                if (systemId) {
+                    const roles = fetchRoles(systemId);
+                    roles.forEach(role => {
+                        const option = document.createElement('option');
+                        option.value = role.id;
+                        option.textContent = role.name;
+                        roleSelect.appendChild(option);
+                    });
+                }
+            });
+
+            // Handle form submission
+            submitBtn.addEventListener('click', () => {
+                const user = document.getElementById('user').value.trim();
+                const system = systemSelect.value;
+                const role = roleSelect.value;
+
+                if (!user || !system || !role) {
+                    statusMessage.textContent = 'Please fill in all fields.';
+                    statusMessage.style.color = 'red';
+                    return;
+                }
+
+                // Simulate submitting the request
+                statusMessage.textContent = 'Submitting your request...';
+                setTimeout(() => {
+                    statusMessage.textContent = 'Access request submitted successfully!';
+                    statusMessage.style.color = 'green';
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>
